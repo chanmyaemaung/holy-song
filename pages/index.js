@@ -1,65 +1,41 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Link from 'next/link';
+import Layout from '@/components/Layout';
+import SongItems from '@/components/SongItems';
+import { API_URL } from '@/config/index';
 
-export default function Home() {
-  return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+export default function Home({ songs }) {
+	return (
+		<Layout title='Home Page'>
+			{/* If there is no any songs */}
+			{songs.length === 0 && <h3>No songs to show</h3>}
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+			{/* Show  Specific Song */}
+			<div className='grid sm:grid-cols-12 md:grid-cols-6 lg:grid-cols-4 gap-1 md:p-10 sm:p-5'>
+				{songs.map((song) => (
+					<SongItems key={song.id} song={song} />
+				))}
+			</div>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+			{/* Show All Song */}
+			{songs.length > 0 && (
+				<Link href='/songs'>
+					<div className='flex justify-center items-center'>
+						<p className='hover:opacity-95 transform transition active:scale-95 hover:text-yellow-900 text-center bg-gray-500 font-quick hover:font-extrabold uppercase px-10 rounded-xl cursor-pointer'>
+							View All
+						</p>
+					</div>
+				</Link>
+			)}
+		</Layout>
+	);
+}
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+export async function getStaticProps() {
+	const res = await fetch(`${API_URL}/api/songs`);
+	const songs = await res.json();
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+	return {
+		props: { songs: songs.slice(0, 4) },
+		revalidate: 1,
+	};
 }
