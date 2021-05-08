@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import SongItems from '@/components/SongItems';
+import FlipMove from 'react-flip-move';
 import { API_URL } from '@/config/index';
 
 export default function Home({ songs }) {
@@ -10,11 +11,11 @@ export default function Home({ songs }) {
 			{songs.length === 0 && <h3>No songs to show</h3>}
 
 			{/* Show  Specific Song */}
-			<div className='grid sm:grid-cols-12 md:grid-cols-6 lg:grid-cols-4 gap-1 md:p-10 sm:p-5'>
+			<FlipMove className='grid sm:grid-cols-12 md:grid-cols-6 lg:grid-cols-4 gap-1 md:p-10 sm:p-5'>
 				{songs.map((song) => (
 					<SongItems key={song.id} song={song} />
 				))}
-			</div>
+			</FlipMove>
 
 			{/* Show All Song */}
 			{songs.length > 0 && (

@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { forwardRef } from 'react';
 
-export default function SongItems({ song }) {
+const SongItems = forwardRef(({ song }, ref) => {
 	const { title, song_number: number, image, slug } = song;
 	const imageUrl = song.image.formats.thumbnail.url;
 	return (
-		<div className='flex flex-col p-1 justify-center items-center'>
+		<div ref={ref} className='flex flex-col p-1 justify-center items-center'>
 			<div className='dark:bg-gray-800 shadow-md min-h-full min-w-full rounded-md group'>
 				<h1 className='text-xl text-center text-yellow-700 hover:font-bold dark:text-yellow-400 font-quick font-semibold py-2'>
 					{number}. {title}
@@ -26,4 +27,6 @@ export default function SongItems({ song }) {
 			</div>
 		</div>
 	);
-}
+});
+
+export default SongItems;
